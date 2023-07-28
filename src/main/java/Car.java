@@ -13,6 +13,7 @@ public class Car {
         String[] arrayWords = fullNameCar.split("\\s");
         if (arrayWords.length > 3 || arrayWords.length < 2) {
             System.out.println("В названии должно быть не более трёх слов и не менее двух слов");
+            return false;
         }
         if (!fullNameCar.matches(String.valueOf(PATTERN_OF_CAR_NAME))){
             System.out.println("Название автомобиля должно состоять только из букв латиницы или кириллицы и(или) цифр");

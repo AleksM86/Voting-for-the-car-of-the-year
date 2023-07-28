@@ -7,16 +7,24 @@ public class Voting {
     protected void startVoting() {
         Scanner console = new Scanner(System.in);
         System.out.println("Голосование за автомобиль года\n");
-        System.out.print("Сколько моделей учавствует в голосовании?: ");
-        int numberOfCarsInTheVoting = console.nextInt();
-        while (numberOfCarsInTheVoting > 99) {
-            System.out.println("Максимальное число автомобилей в голосовании - 99");
-            System.out.print("Сколько моделей учавствует в голосовании?: ");
-            numberOfCarsInTheVoting = console.nextInt();
+        int numberOfCarsInTheVoting = 0;
+        while (true){
+            System.out.print("Сколько автомобилей учавствует в голосовании?: ");
+            String numberOfCarsInTheVotingString = console.nextLine();
+            if (numberOfCarsInTheVotingString.matches("[0-9]+")){
+                numberOfCarsInTheVoting = Integer.parseInt(numberOfCarsInTheVotingString);
+            } else {
+                System.out.println("Количество учавствующих автомобилей - это число. Введите число! ");
+                continue;
+            }
+            if (numberOfCarsInTheVoting > 99){
+                System.out.println("Максимальное число автомобилей в голосовании - 99");
+                continue;
+            }
+            break;
         }
         int i = 1;
         while (i <= numberOfCarsInTheVoting) {
-            console = new Scanner(System.in);
             System.out.print("Введите модель " + i + "-го автомобиля: ");
             String fullNameCar = console.nextLine();
             fullNameCar = fullNameCar.replaceAll("\\s+", " ").strip();
@@ -29,7 +37,7 @@ public class Voting {
 
     protected void voting() {
         System.out.print("Выберите модель из списка: ");
-        statisticVoting.getStatisticInMap().keySet().stream().forEach(x -> System.out.print(x + "; "));
+        statisticVoting.getStatisticInMap().keySet().forEach(x -> System.out.print(x + "; "));
         System.out.println("\nДля подсчета голосов введите 0");
         Scanner console = new Scanner(System.in);
         while (true) {
@@ -40,11 +48,9 @@ public class Voting {
                 break;
             }
             fullNameCar = fullNameCar.replaceAll("\\s+", " ").strip();
-            if (statisticVoting.getStatisticInMap().keySet().contains(fullNameCar)) {
-                int numberOfVotes = statisticVoting.getStatisticInMap().get(fullNameCar) + 1;
-                statisticVoting.getStatisticInMap().put(fullNameCar, numberOfVotes);
-            }
-            if (!statisticVoting.getStatisticInMap().keySet().contains(fullNameCar)) {
+            if (statisticVoting.getStatisticInMap().containsKey(fullNameCar)) {
+                statisticVoting.getStatisticInMap().computeIfPresent(fullNameCar, (k, v) -> v + 1);
+            } else {
                 System.out.println("Данного автомобиля нет в списке голосования");
                 continue;
             }
